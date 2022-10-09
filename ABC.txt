@@ -1,0 +1,88 @@
+Ans 1:- Functions which changes the state of data on chain uses gas while the other functions which are only for reading purposes does not use gas.
+
+Gas Fee = Gas Limit * Gas Price
+
+Gas Limit: Maximum amount of gas user is willing to pay (in units).
+Gas Price: Price of per unit gas.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Ans 2:- Storage: Data which is stored on chain. 
+	           For example state variables in smart contracts gets stored on blockchain.
+	  Memory: Data is stored only during the execution of function. 
+ 		    For example variables passed to functions as arguments.
+	  Stack: It generally stores the data types of the variables.
+		   For example uint256, uint8, etc
+
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Ans3:- Modifiers are the functions which helps in security of the other functions to which they are added. It is almost same as require statement in solidiy. It checks the condition and then proceed with the execution of function.
+	 If same condition is to be used many times a modifier is created rather than adding require statement to each function.
+ 
+	 For example: If we want a function is to be called only by the owner, a modifier is created and used.
+	 modifier onlyOwner() {
+		require(owner == msg.sender);
+		_;
+	 }
+	 '_' is used to specify that condition is to be checked before the execution of funtion.
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Ans 4:- Interface: Contracts which are defined with keyword "interface" containing all functions of type external.
+	  For example: 
+			  interface Name{ 
+					function getName() external view returns(string memory);
+			  }
+
+			  contract GetName is Name{
+			  function GETNAME(string memory _name) external view returns(string memory) {
+			  return _name;
+			  }
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+Ans 5:- Upgrading contracts are the contracts which updates the code without changing their address, state and balance.
+		Smart contracts are upgraded using Openzeppelin upgrades plugins. It deploys 3 contracts implementation contract, proxyAdmin contracts and proxy contract.
+		User doesn't directly intereact with contract. The upgrades happens using the proxy contract. 
+		Logic use - Implementation contract (Old contracts to be upgraded)
+		State use - Proxy contract (Contracts interact with both old and upgraded contracts)
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+Ans 6:- Here only "constructor() ERC20("tokenName", "TokenSymbol") {}" is to be added in the contract to run it.
+ 
+	pragma solidity ^0.5.0;
+	import './interfaces/IToken.sol';
+	import './ERC20.sol';
+	contract Token is ERC20, IToken {
+
+		address public owner;
+		string public name;
+		string public symbol;
+		uint8 public decimals;
+		bool public initialized = false;
+
+		constructor() ERC20("tokenName", "TokenSymbol") {}
+
+		function initialize(
+		address _owner,
+		string calldata _name,
+		string calldata _symbol,
+		uint8 _decimals
+		) external {
+			require(initialized == true);
+			owner = _owner;
+			name = _name;
+			symbol = _symbol;
+			decimals = _decimals;
+			initialized = false;
+		}
+		
+		function setOwner(address _owner) external {
+			owner = _owner;
+		}
+		
+		function mint(address recipient, uint amount) external {
+			_mint(recipient, amount);
+		}
+		
+		function burn(address recipient, uint amount) external {
+			_burn(recipient, amount);
+		}
+	}
+----------------------------------------------------------------------------------------------------------------------------------------------------------------------------
